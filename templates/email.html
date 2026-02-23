@@ -1,0 +1,27 @@
+<p>Dear {{ owner }},</p>
+<p>The following DEEP resources have been provisioned for your project '<b>{{ app_name }}</b>':</p>
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:Arial,sans-sherif;font-size:14px;">
+    <thead style="background:#f2f2f2;">
+        <tr>
+            <th>Resource_Type</th>
+            <th>Resource_Name</th>
+            <th>Resource_ID_Path</th>
+            <th>Provisioning_Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table_rows %}
+        {{ row | safe }}
+        {% endfor %}
+    </tbody>
+</table>
+<p>Follow these steps to get started:</p>
+<ul>
+    <li>Access your Databricks Workspace: <a href="{{ workspace_url }}" target="_blank">Click Here</a></li>
+    <li>Login via SSO: Use your organization's Single Sign-On (SSO) to access the Databricks workspace securely.</li>
+    <li>Review your provisioned compute resources: Check that you can start and attach to the assigned cluster and SQL Warehouse from the compute tab.</li>
+    <li>Validate access to your project folder: Check if '{{ result.get('application_name', '') }}' folder is created and you have access to the folder.</li>
+    <li>Need Help? For any issues with compute, data access or Workspace configuration, please reach out to the platform support team.</li>
+</ul>
+<p>Regards, <br>DEEP Team</p>
+<p style="font-size:11px;color:#888;">Confidentiality: The content of this email is confidential and intended for the recipient specified in message only. It is strictly forbidden to share any part of this message with any third party, without a written consent of the sender. If you received this message by mistake, please reply to this message to the sender or engage@exponentia.ai and follow with its deletion, so that we can ensure such a mistake does not occur in the future. Sustainability: Please do not print this email unless it is necessary. Every unprinted email helps the environment. Thank You.</p>

@@ -1,0 +1,240 @@
+<!-- QUERY DATA CONTENT ONLY -->
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <!-- Title -->
+    <h5 class="fw-bold mb-1">Databricks Query Run Status</h5>
+    <p class="text-muted mb-4">Shows the Query and status</p>
+
+    <!-- Query view container (will be hidden when Dashboard is shown) -->
+    <div id="queryDataView">
+      <!-- Filters -->
+      <div class="row g-3 mb-3">
+        <!--  this down part is new for workspace -->
+
+        <!-- Workspace -->
+        <div class="col-12 col-md-4">
+          <label class="form-label">Workspace</label>
+          <select id="workspaceId" class="form-select">
+            <option value="">Select Workspace</option>
+          </select>
+        </div>
+
+        <!-- Warehouse -->
+        <div class="col-12 col-md-4">
+          <label class="form-label">Warehouse Name</label>
+          <select id="warehouseId" class="form-select">
+            <option value="">Select Warehouse</option>
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div class="col-12 col-md-2">
+          <label class="form-label">Status</label>
+          <select id="queryStatus" class="form-select">
+            <option value="">Select</option>
+            <option value="">ALL</option>
+            <option value="RUNNING">RUNNING</option>
+            <option value="SUCCEEDED">SUCCEEDED</option>
+            <option value="FAILED">FAILED</option>
+            <option value="CANCELED">CANCELED</option>
+          </select>
+        </div>
+
+        <!-- User -->
+        <div class="col-12 col-md-2">
+          <label class="form-label">User</label>
+          <input
+            type="text"
+            id="userinfoID"
+            class="form-control"
+            placeholder="Enter the User ID"
+          />
+        </div>
+
+</div>
+
+      <!-- Row 2: Started Within + Fetch Button -->
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-12 col-md-7">
+          <!-- NEW: Changed label from "Started Within" to "Duration Filter" with info popover - Query Data -->
+          <label class="form-label"
+            >Duration Filter
+            <!-- NEW: Added Bootstrap popover for help text explaining the duration filter - Query Data -->
+            <span
+              class="text-muted"
+              role="button"
+              tabindex="0"
+              data-bs-toggle="popover"
+              data-bs-trigger="hover focus"
+              data-bs-placement="right"
+              data-bs-content="This filter sorts queries based on execution duration using hours, minutes, and seconds."
+              style="cursor: pointer"
+            >
+              <i class="bi bi-info-circle"></i>
+            </span>
+          </label>
+          <div class="d-flex gap-2">
+            <input
+              type="number"
+              id="timeHours"
+              class="form-control"
+              min="0"
+              placeholder="Hours"
+            />
+            <input
+              type="number"
+              id="timeMinutes"
+              class="form-control"
+              min="0"
+              max="59"
+              placeholder="Minutes"
+            />
+            <input
+              type="number"
+              id="timeSeconds"
+              class="form-control"
+              min="0"
+              max="59"
+              placeholder="Seconds"
+            />
+          </div>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <button class="btn btn-orange w-100" id="fetchQueryStatusBtn">
+            Fetch Queries
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Table -->
+      <div class="table-responsive">
+        <table class="table align-middle table-fixed">
+          <colgroup>
+            <col style="width: 30%" />
+            <!-- User -->
+            <col style="width: 10%" />
+            <!-- Query -->
+            <col style="width: 15%" />
+            <!-- Status -->
+            <col style="width: 25%" />
+            <!-- Started At -->
+            <col style="width: 10%" />
+            <!-- Duration -->
+            <col style="width: 10%" />
+            <!-- Action -->
+          </colgroup>
+          <thead class="table-dark">
+            <tr>
+              <!-- 🔧 CHANGE START: alignment fixes -->
+              <th class="text-center">User</th>
+              <th class="text-center">Query</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Started At</th>
+              <th class="text-center">Duration</th>
+              <th class="text-center">Action</th>
+              <!-- 🔧 CHANGE END -->
+            </tr>
+          </thead>
+
+          <tbody id="queryStatusTable">
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">
+                No data loaded
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- bottom-right "Next" button (mimics the screenshot) -->
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <!-- left: pagination info and controls -->
+        <div class="d-flex align-items-center gap-3">
+          <div id="paginationInfo" class="text-muted small"></div>
+
+          <nav class="mb-0">
+            <ul
+              class="pagination pagination-sm mb-0"
+              id="paginationControls"
+            ></ul>
+          </nav>
+        </div>
+
+        <!-- right: next button -->
+        <button class="btn btn-danger" id="nextToDashboardBtn">Next</button>
+      </div>
+
+      <!-- ================= Query Viewer Modal ================= -->
+      <div
+        class="modal fade"
+        id="queryViewerModal"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">SQL Query</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <pre
+                id="queryViewerContent"
+                class="bg-light p-3 rounded small"
+                style="white-space: pre-wrap"
+              ></pre>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                class="btn btn-sm btn-outline-secondary"
+                id="copyQueryBtn"
+              >
+                Copy
+              </button>
+              <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /#queryDataView -->
+
+    <!-- Dashboard view (hidden). The iframe src is set lazily in JS -->
+    <!-- Iframe: replace the src later in JS with the real dashboard url -->
+
+    <div id="dashboardView" class="d-none">
+      <!-- NEW: Changed iframe src from YouTube embed to actual Databricks dashboard URL - Query Data  -->
+      <iframe
+        src="https://dbc-a02b2d7c-0971.cloud.databricks.com/dashboardsv3/01f0fffb6ac416029553b4f957f98da3/published?o=1000576032724447"
+        id="dashboardFrame"
+        style="width: 100%; height: 70vh; border: none"
+        allow="
+          accelerometer;
+          autoplay;
+          clipboard-write;
+          encrypted-media;
+          gyroscope;
+          picture-in-picture;
+        "
+        allowfullscreen
+      ></iframe>
+
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-outline-danger" id="backToQueryBtn">
+          Previous
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
