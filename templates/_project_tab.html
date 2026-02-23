@@ -1,0 +1,245 @@
+<!-- ===============================
+     Project Management – Step Form
+     =============================== -->
+
+<h5 class="fw-semibold mb-1">Project Management</h5>
+<p class="text-muted mb-4">Enter project configuration details.</p>
+
+<!-- STEP INDICATOR -->
+<div class="d-flex justify-content-between align-items-center mb-5 px-5">
+  <div class="text-center">
+    <span class="badge rounded-circle step-badge bg-danger text-white p-3"
+      >1</span
+    >
+    <div class="small text-danger mt-2">Project Information</div>
+  </div>
+  <div class="flex-grow-1 border-top mx-3"></div>
+  <div class="text-center">
+    <span
+      class="badge rounded-circle step-badge bg-light text-danger border border-danger p-3"
+      >2</span
+    >
+    <div class="small text-danger mt-2">Organization Information</div>
+  </div>
+  <div class="flex-grow-1 border-top mx-3"></div>
+  <div class="text-center">
+    <span
+      class="badge rounded-circle step-badge bg-light text-danger border border-danger p-3"
+      >3</span
+    >
+    <div class="small text-danger mt-2">Infrastructure Requirements</div>
+  </div>
+</div>
+
+<!-- ================= FORM ================= -->
+<form action="/project-onboard" method="POST">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <!-- ================= STEP 1 ================= -->
+      <div class="project-step" data-step="1">
+        <h6 class="fw-bold mb-3">Enter Project Information</h6>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label required">Application Name</label>
+            <input class="form-control" name="application_name" required />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Application Owner</label>
+            <input class="form-control" name="application_owner" required />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Application Owner Email</label>
+            <input
+              class="form-control"
+              type="email"
+              name="application_owner_email"
+              required
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Business Owner</label>
+            <input class="form-control" name="business_owner" required />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Cost Center (SIO Code)</label>
+            <input class="form-control" name="cost_center" value="000000" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Environment</label>
+            <input
+              class="form-control bg-light"
+              name="env"
+              value="Dev"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-danger" onclick="nextStep()">
+            Next
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 2 ================= -->
+      <div class="project-step d-none" data-step="2">
+        <h6 class="fw-bold mb-3">Enter Organization Information</h6>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">Organization Name</label>
+            <input class="form-control" name="organization_name" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Department Name</label>
+            <input class="form-control" name="department" required />
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3">
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            onclick="prevStep()"
+          >
+            Previous
+          </button>
+          <button type="button" class="btn btn-danger" onclick="nextStep()">
+            Next
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 3 ================= -->
+      <div class="project-step d-none" data-step="3">
+        <h6 class="fw-bold mb-3">Enter Infrastructure Requirements</h6>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">Cluster Size</label>
+            <select class="form-select" name="sql_wh_size">
+              <option value="">Select</option>
+              <option>2X-Small</option>
+              <option>X-Small</option>
+              <option>Small</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Node Type</label>
+            <select class="form-select" name="node_type_id">
+              <option value="">Select</option>
+              <option>m4.large</option>
+              <option>m4.xlarge</option>
+              <option>m4.2xlarge</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Number of Workers</label>
+            <div class="d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                onclick="setWorkers(1)"
+              >
+                01
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                onclick="setWorkers(2)"
+              >
+                02
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                onclick="setWorkers(5)"
+              >
+                05
+              </button>
+
+              <input
+                type="number"
+                id="workerInput"
+                name="base_workers"
+                class="form-control w-50"
+                placeholder="Enter Number"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label required">Cluster Type</label>
+            <select class="form-select" name="cluster_type" required>
+              <!--changes 4-->
+              <option value="all-purpose">All Purpose</option>
+              <option value="job">Job</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3">
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            onclick="prevStep()"
+          >
+            Previous
+          </button>
+          <button type="submit" class="btn btn-danger">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+  let currentStep = 1;
+
+  function showStep(step) {
+    document
+      .querySelectorAll(".project-step")
+      .forEach((el) => el.classList.add("d-none"));
+    document
+      .querySelector('.project-step[data-step="' + step + '"]')
+      .classList.remove("d-none");
+    updateStepIndicator(step);
+  }
+
+  function nextStep() {
+    if (currentStep < 3) {
+      currentStep++;
+      showStep(currentStep);
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 1) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  }
+
+  function updateStepIndicator(step) {
+    document.querySelectorAll(".step-badge").forEach((badge, i) => {
+      badge.classList.toggle("bg-danger", i + 1 === step);
+      badge.classList.toggle("text-white", i + 1 === step);
+      badge.classList.toggle("bg-light", i + 1 !== step);
+    });
+  }
+
+  function setWorkers(val) {
+    document.getElementById("workerInput").value = val;
+  }
+</script>

@@ -1,0 +1,83 @@
+<!-- DATA QUALITY MANAGEMENT -->
+
+<div class="container-fluid">
+
+
+  <!-- FILTERS -->
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+
+      <form id="dashboardForm" class="row g-3 align-items-end">
+
+        <!-- Domain -->
+        <div class="col-md-3">
+          <label class="form-label required">Domain</label>
+          <select id="domainDropdown" class="form-select">
+            <option value="">Select</option>
+            <option>Manufacturing</option>
+            <option>Sales</option>
+            <option>Connected</option>
+            <option>Services</option>
+          </select>
+        </div>
+
+        <!-- Get Tables -->
+        <div class="col-md-2">
+          <button
+            type="button"
+            id="fetchDashboardsBtn"
+            class="btn btn-outline-orange w-100">
+            Get Tables
+          </button>
+        </div>
+
+        <!-- Tables -->
+        <div class="col-md-4">
+          <label class="form-label required">Tables</label>
+          <select id="dashboardDropdown" class="form-select" disabled>
+            <option>Select a domain first</option>
+          </select>
+        </div>
+
+        <!-- Open Dashboard -->
+        <div class="col-md-3 text-end">
+          <button
+            type="button"
+            id="loadDashboardBtn"
+            class="btn btn-orange px-4">
+            Open Dashboard
+          </button>
+        </div>
+
+      </form>
+
+      <p class="text-muted mt-3 mb-0">
+        <i class="bi bi-info-circle me-1"></i>
+        This section provides a high-level summary of data quality for the selected
+        data products. These insights remain unchanged regardless of filters applied elsewhere.
+      </p>
+
+    </div>
+  </div>
+
+
+  <!-- DASHBOARD LOADING STATE -->
+  <!-- <div id="dashboardLoading" class="text-center text-muted my-3 d-none">
+    <div class="spinner-border text-primary mb-2"></div>
+    <div>Loading dashboard…</div>
+  </div> -->
+
+  <!-- DASHBOARD IFRAME  -->
+<div class="col-12 mt-3">
+
+        <!-- Loading Placeholder (UX improvement) -->
+        <div id="dashboardLoading" class="text-center text-muted my-3 d-none">
+          <div class="spinner-border text-primary mb-2"></div>
+          <div>Loading dashboard...</div>
+        </div>
+
+        <iframe id="dashboardFrame" width="100%" height="600" frameborder="1"></iframe>
+      </div>
+
+
+</div>

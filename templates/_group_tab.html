@@ -1,0 +1,156 @@
+<!-- Group Management Tab Partial -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+
+      <h5 class="fw-semibold mb-1">Group Management</h5>
+      <p class="text-muted mb-4">
+        Create groups or manage group membership for multiple users.
+      </p>
+
+      <form id="groupForm"
+            action="/run"
+            method="post"
+            enctype="multipart/form-data"
+            class="row g-4">
+
+        <input type="hidden" name="principal_type" value="group">
+
+
+        <!-- CSV UPLOAD -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">CSV Upload</label>
+
+          <div class="d-flex align-items-center gap-3">
+            <label class="btn btn-orange px-4 mb-0">
+              <i class="bi bi-cloud-arrow-up me-2"></i>Click to upload
+              <input type="file"
+                     id="user-file"
+                     name="file"
+                     accept=".csv,.xlsx,.xls"
+                     hidden
+                     onchange="toggleManual('group')">
+            </label>
+
+            <span class="text-muted small">No file chosen</span>
+          </div>
+
+          <div class="form-text mt-1">
+            Upload a CSV to process in bulk. Leave empty to use manual fields below.
+          </div>
+        </div>
+
+        <!-- GROUP MEMBERS -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold">
+            Group members <span class="text-danger">*</span>
+          </label>
+          <input type="text"
+                 class="form-control"
+                 placeholder="Comma separated emails">
+          <div class="form-text">
+            Group name will be automatically constructed from Environment, Business unit, Domain, and Role fields.
+          </div>
+        </div>
+
+        <!-- ACTION + ADMIN -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+           <label class="form-label fw-semibold required">Action</label>
+              <select class="form-select" name="action" required>
+              <option value="">Select</option>
+              <option>CREATE_GROUP</option>
+              <option>ADD_TO_GROUP</option>
+              <option>REMOVE_FROM_GROUP</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Admin <span class="text-danger">*</span>
+            </label>
+            <input type="email"
+                   class="form-control"
+                   value="admin@exponentia.ai"
+                   readonly>
+          </div>
+        </div>
+
+        <!-- ENV + DOMAIN -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Environment <span class="text-danger">*</span>
+            </label>
+            <input type="text"
+                   class="form-control"
+                   value="Development"
+                   readonly>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Domain <span class="text-danger">*</span>
+            </label>
+            <select class="form-select">
+              <option value="">Select</option>
+              <option>Connected</option>
+              <option>ERP</option>
+              <option>Manufacturing</option>
+              <option>Sales</option>
+              <option>Services</option>
+              <option>Spares</option>
+              <option>CV_digital</option>
+              <option>FMAAI</option>
+              <option>scv_copilot</option>
+              <option>Exponentia.AI</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ROLE + BUSINESS UNIT -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Role <span class="text-danger">*</span>
+            </label>
+            <select class="form-select">
+              <option value="">Select</option>
+              <option>Data Engineers</option>
+              <option>Data Scientists</option>
+              <option>Data Readers</option>
+              <option>Data Stewards</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Business unit <span class="text-danger">*</span>
+            </label>
+            <select class="form-select">
+              <option value="">Select</option>
+              <option>CV</option>
+              <option>DAi</option>
+              <option>Others</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="d-flex justify-content-end gap-3">
+          <button type="reset"
+                  class="btn btn-outline-orange px-4"
+                  onclick="resetGroupForm()">
+            Reset
+          </button>
+
+          <button type="submit" class="btn btn-orange px-4">
+            Submit
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

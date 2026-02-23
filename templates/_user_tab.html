@@ -1,0 +1,117 @@
+<!-- User Management Tab Partial -->
+<div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+ 
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+      <!-- Title -->
+      <h5 class="fw-semibold mb-1">User Management</h5>
+      <p class="text-muted mb-4">
+        Create, update, or delete individual users and their attributes.
+      </p>
+
+      <form id="userForm"
+            action="/run"
+            method="post"
+            enctype="multipart/form-data"
+            class="row g-4">
+
+        <input type="hidden" name="principal_type" value="user">
+
+        <!-- CSV Upload -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">CSV Upload</label>
+
+          <div class="d-flex align-items-center gap-3">
+            <label class="btn btn-orange px-4 mb-0">
+              <i class="bi bi-cloud-arrow-up me-2"></i>Click to upload
+              <input type="file"
+                     id="user-file"
+                     name="file"
+                     accept=".csv,.xlsx,.xls"
+                     hidden
+                     onchange="toggleManual('user')">
+            </label>
+
+            <span class="text-muted small">No file chosen</span>
+          </div>
+
+          <div class="form-text mt-1">
+            Upload a CSV to process in bulk. Leave empty to use manual fields below.
+          </div>
+        </div>
+
+        <!-- Action -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold required">Action</label>
+          <select class="form-select" name="action" required>
+            <option value="">Select</option>
+            <option value="CREATE_USER">CREATE_USER</option>
+            <option value="UPDATE_USER">UPDATE_USER</option>
+            <option value="DELETE_USER">DELETE_USER</option>
+          </select>
+        </div>
+
+        <!-- Spacer -->
+        <div class="col-md-6"></div>
+
+        <!-- Admin -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold required">Admin</label>
+          <input type="email"
+                 class="form-control"
+                 name="admin"
+                 value="{{ admin_email if admin_email else '' }}"
+                 placeholder="admin@company.com"
+                 required
+                 readonly>
+        </div>
+
+        <!-- User Email -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold required">User email</label>
+          <input type="email"
+                 class="form-control"
+                 name="user_email"
+                 placeholder="Type User Email"
+                 required>
+        </div>
+
+        <!-- First Name -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold required">First name</label>
+          <input type="text"
+                 class="form-control"
+                 name="first_name"
+                 placeholder="Type First Name"
+                 required>
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold required">Last name</label>
+          <input type="text"
+                 class="form-control"
+                 name="last_name"
+                 placeholder="Type Last Name"
+                 required>
+        </div>
+
+        <!-- Actions -->
+        <div class="col-12 d-flex justify-content-end gap-3 pt-3">
+          <button type="reset"
+                  class="btn btn-outline-orange px-4"
+                  onclick="resetUserForm()">
+            Reset
+          </button>
+
+          <button type="submit"
+                  class="btn btn-orange px-4">
+            Submit
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

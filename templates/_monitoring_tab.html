@@ -1,0 +1,311 @@
+  <div class="container-fluid px-4 job-monitoring-page">
+
+    <!-- ===== Header ===== -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <h4 class="fw-semibold mb-1">Job Monitoring</h4>
+      </div>
+
+      <button
+        class="btn btn-outline-danger d-flex align-items-center gap-2"
+        onclick="resetAndLoadJobs()"
+      >
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh
+      </button>
+    </div>
+
+    <!-- ===== Filters ===== -->
+    <div class="row g-3 align-items-end mb-4">
+
+      <!-- Job Name -->
+      <div class="col-md-3">
+        <label class="form-label">Job Name</label>
+        <select id="jobNameFilter" class="form-select">
+          <option value="ALL">ALL</option>
+        </select>
+      </div>
+
+      <!-- Workspace -->
+      <div class="col-md-3">
+        <label class="form-label">Workspace Name</label>
+        <select id="workspaceFilter" class="form-select">
+          <option value="" selected disabled>Choose Workspace</option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div class="col-md-2">
+        <label class="form-label">Status</label>
+        <select id="jobStatus" class="form-select">
+          <option value="ALL">ALL</option>
+          <option value="SUCCESS">SUCCESS</option>
+          <option value="FAILED">FAILED</option>
+          <option value="RUNNING">RUNNING</option>
+          <option value="CANCELED">CANCELED</option>
+        </select>
+      </div>
+
+      <!-- Date -->
+      <div class="col-md-2">
+        <label class="form-label">Date</label>
+        <input
+          type="text"
+          id="jobDate"
+          class="form-control"
+          placeholder="SELECT DATE"
+          onfocus="this.type='date'"
+          onblur="if (!this.value) this.type='text';"
+        />
+      </div>
+
+      <!-- Fetch Button -->
+      <div class="col-md-2">
+        <button class="btn btn-orange w-100" onclick="loadJobs()">
+          Fetch Jobs
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ===== Table ===== -->
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table mb-0 align-middle text-center">
+            <thead class="text-white" style="background-color: #1f2a44">
+              <tr>
+                <th class="text-start">Job Name</th>
+                <th>Status</th>
+                <th>Last Run</th>
+                <th>Actions</th>
+                <th>Run History</th>
+              </tr>
+            </thead>
+            <tbody id="jobsTable">
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">
+                  No data loaded
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  
+  <!-- ================= SCRIPT ================= -->
+  <script>
+    /* ===== Load Jobs ===== */
+    async function loadJobs() {
+      const tbody = document.getElementById("jobsTable");
+      const selectedDate = document.getElementById("jobDate").value;
+      const selectedStatus = document.getElementById("jobStatus").value;
+      const jobNameFilter = document.getElementById("jobNameFilter").value;
+      const selectedWorkspace = document.getElementById("workspaceFilter").value; /* new added Prevent Fetch If No Workspace Selected */
+  
+  if (!selectedWorkspace) {
+    alert("Please select a workspace first.");
+    return;
+  }
+  
+  
+      tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="text-center py-4">
+          <div class="spinner-border text-primary"></div>
+        </td>
+      </tr>
+    `;
+  
+      try {
+        const jobsResp = await fetch(`/api/jobs?workspace_id=${selectedWorkspace}`); /* new added */
+        const jobsData = await jobsResp.json();
+        const jobs = jobsData.jobs || [];
+  
+        populateJobNameDropdown(jobs);
+  
+        tbody.innerHTML = "";
+        let hasRows = false;
+  
+        for (const job of jobs) {
+          const jobName = job.settings?.name || "-";
+  
+          if (jobNameFilter !== "ALL" && jobName !== jobNameFilter) continue;
+  /* new changes done by adesh */
+      /*  const selectedWorkspace = document.getElementById("workspaceFilter").value; */
+  
+        const runResp = await fetch(
+          `/api/jobs/${job.job_id}/latest-run?workspace_id=${selectedWorkspace}`
+        );
+  
+        
+          const runs = await runResp.json();
+          if (!Array.isArray(runs) || !runs.length) continue;
+  
+          const latest = runs[0];
+  
+          if (selectedDate) {
+            const runDate = new Date(latest.history).toDateString();
+            const filterDate = new Date(selectedDate).toDateString();
+            if (runDate !== filterDate) continue;
+          }
+  
+          if (selectedStatus !== "ALL" && latest.status !== selectedStatus) {
+            continue;
+          }
+  
+          tbody.innerHTML += `
+          <tr>
+            <td class="fw-semibold text-start">${jobName}</td>
+            <td class="fw-semibold">${latest.status}</td>
+            <td>${new Date(latest.history).toLocaleString()}</td>
+  
+            <td>
+              <i class="bi bi-play-circle text-primary fs-5 me-2"
+                style="cursor:pointer"
+                onclick="rerunJob(${job.job_id})"></i>
+  
+              ${
+                latest.status === "RUNNING"
+                  ? `
+                    <i class="bi bi-stop-circle text-danger fs-5"
+                      style="cursor:pointer"
+                      onclick="stopJob(${latest.run_id}, this)"></i>
+                  `
+                  : ""
+              }
+            </td>
+  
+            <td>${renderRunHistory(runs)}</td>
+          </tr>
+        `;
+          hasRows = true;
+        }
+  
+        if (!hasRows) {
+          tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-4 text-muted">
+              No jobs found for selected filters
+            </td>
+          </tr>
+        `;
+        }
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-danger text-center py-4">
+            Failed to load jobs
+          </td>
+        </tr>
+      `;
+      }
+    }
+  
+    /* ===== Reset ===== */
+    function resetAndLoadJobs() {
+      document.getElementById("jobStatus").value = "ALL";
+      document.getElementById("jobDate").value = "";
+      document.getElementById("jobDate").type = "text";
+      document.getElementById("jobNameFilter").value = "ALL";
+      document.getElementById("workspaceFilter").selectedIndex = 0; /* new added */
+      loadJobs();
+    }
+  
+    /* ===== Re-run Job ===== */
+    async function rerunJob(jobId) {
+      if (!confirm("Re-run this job?")) return;
+      await window.dbApi("/api/jobs/run", "POST", { job_id: jobId });
+      alert("Job re-run triggered");
+    }
+  
+    /* ===== Stop Job (Permanent) ===== */
+    async function stopJob(runId, icon) {
+      if (!confirm("Permanently stop this running job?")) return;
+  
+      await window.dbApi("/api/jobs/runs/cancel", "POST", { run_id: runId });
+  
+      const row = icon.closest("tr");
+      row.children[1].textContent = "CANCELED";
+      icon.remove();
+    }
+    /*Added Workspace Loading Function new */
+    /* ===== Load Workspaces ===== */
+  async function loadWorkspaces() {
+    try {
+      const resp = await fetch("/api/workspaces");
+      const workspaces = await resp.json();
+  
+      const select = document.getElementById("workspaceFilter");
+  
+      // Reset dropdown
+      select.innerHTML = `<option value="" selected disabled>Choose Workspace</option>`;
+  
+      if (!Array.isArray(workspaces) || workspaces.length === 0) {
+        select.innerHTML = `<option value="" disabled>No Workspaces Found</option>`;
+        return;
+      }
+  
+      workspaces.forEach(ws => {
+        const option = document.createElement("option");
+        option.value = ws.workspace_id;
+        option.textContent = ws.workspace_name;
+        select.appendChild(option);
+      });
+  
+    } catch (err) {
+      console.error("Failed to load workspaces:", err);
+    }
+  }
+  
+  
+    /* ===== Populate Job Name Dropdown ===== */
+    function populateJobNameDropdown(jobs) {
+      const select = document.getElementById("jobNameFilter");
+      select.innerHTML = `<option value="ALL">ALL</option>`;
+  
+      const seen = new Set();
+      jobs.forEach((job) => {
+        const name = job.settings?.name;
+        if (!name || seen.has(name)) return;
+  
+        seen.add(name);
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      });
+    }
+  
+    /* ===== Render Run History ===== */
+    function renderRunHistory(runs) {
+      return runs
+        .map((r) => {
+          const time = r.history
+            ? new Date(r.history).toLocaleString()
+            : "Time not available";
+  
+          if (r.status === "SUCCESS")
+            return `<span title="SUCCESS • ${time}">✔️</span>`;
+          if (r.status === "FAILED")
+            return `<span title="FAILED • ${time}">❌</span>`;
+          if (r.status === "RUNNING")
+            return `<span title="RUNNING • ${time}">⏳</span>`;
+          if (r.status === "CANCELED")
+            return `<span title="CANCELED • ${time}">🚫</span>`;
+          return `<span title="${time}">–</span>`;
+        })
+        .join(" ");
+    }
+  /*new added */
+  /*Update Page Load */
+  setTimeout(loadWorkspaces, 0.001);
+  
+  </script>
+  
+  

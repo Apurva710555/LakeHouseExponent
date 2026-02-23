@@ -1,0 +1,353 @@
+:root {
+  --brand-primary: #003da5;
+  /* deep blue */
+  --brand-accent: #00a0df;
+  /* cyan/blue accent */
+  --brand-on-primary: #ffffff;
+  --brand-surface: #ffffff;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
+  background: #f5f7fb;
+  color: #212529;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* .hero {
+      background: #E04F27;#060c19
+      color: var(--brand-on-primary);
+      padding: 20px 0;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    } */
+
+.hero {
+  background: #060c19;
+  color: #ffffff;
+  padding: 14px 0;
+  /* box-shadow: inset 0 -1px 0 rgba(255,255,255,0.08); */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.logo-box {
+  background: #1f3550;
+  padding: 8px 14px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* .brand-logo-img {
+  height: 60px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+} */
+
+.brand-logo-img {
+  height: 60px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+}
+
+.hero .brand-logo-img {
+  filter: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+.card {
+  /* backdrop-filter: blur(6px); */
+  background: var(--brand-surface);
+  border: none;
+}
+
+.card-body {
+  color: #212529;
+}
+
+.form-label,
+.form-text {
+  color: #212529;
+}
+
+.nav-tabs {
+  border-bottom: 2px solid #000;
+}
+
+.nav-tabs .nav-link {
+  color: #143a4a;
+  font-weight: 600;
+  border: 2px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--brand-surface);
+  color: var(--brand-primary);
+  border-color: #000 #000 #fff;
+  /* merge into content box below */
+}
+
+/* .tab-content {
+      border: 2px solid #000;
+      border-top: none;
+    
+      border-radius: 0 8px 8px 8px;
+      background: #ffffff;
+      padding: 1.5rem;
+      margin-top: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    } */
+
+.tab-content {
+  border: none; /* remove black border gap */
+  background: transparent; /* avoid white empty block */
+  padding: 0;
+  margin-top: 0;
+  box-shadow: none;
+}
+
+.required::after {
+  content: " *";
+  color: #dc3545;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  justify-content: flex-start;
+}
+
+.brand-title {
+  /* color: var(--brand-on-primary); */
+  color: white;
+  margin: 0;
+}
+
+.brand-subtitle {
+  /* color: rgba(255, 255, 255, 0.95); */
+  color: white;
+  margin: 4px 0 0 0;
+}
+*/ .btn-primary {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.btn-primary:hover {
+  background-color: #002c78;
+  border-color: #002c78;
+}
+
+::placeholder {
+  font-size: 0.85rem;
+  color: #6c757d;
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+::-webkit-input-placeholder {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.form-text {
+  font-size: 0.8rem;
+  /* smaller than default */
+  color: #6c757d;
+  /* subtle gray tone */
+}
+
+/* new changes */
+
+/* ========== Base ========== */
+body {
+  background-color: #f6f7fb;
+  margin: 0;
+}
+
+/* ========== Sidebar ========== */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0b0f1a, #2a0d2e);
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.sidebar h5 {
+  color: #fff;
+}
+
+.sidebar .nav-link {
+  color: #cfd3ec;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background-color: #e4572e;
+  color: #fff;
+}
+
+/* ========== Header / Hero (FULL IMAGE COVER) ========== */
+.app-header {
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.app-header img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 🔥 THIS is the key fix */
+  display: block;
+}
+
+/* ========== Cards ========== */
+.card {
+  border-radius: 14px;
+}
+
+/* ========== Buttons ========== */
+.btn-orange {
+  background-color: #e4572e;
+  border: none;
+  color: #fff;
+}
+
+.btn-orange:hover {
+  background-color: #cf4d28;
+  color: #fff;
+}
+
+.btn-outline-orange {
+  border: 1px solid #e4572e;
+  color: #e4572e;
+}
+
+.btn-outline-orange:hover {
+  background-color: #e4572e;
+  color: #fff;
+}
+
+/* ========== Forms ========== */
+.form-label {
+  font-weight: 600;
+}
+
+.required::after {
+  content: " *";
+  color: #dc3545;
+}
+
+/* ========== Footer ========== */
+footer {
+  font-size: 0.85rem;
+}
+
+/* Fix content alignment under sidebar */
+main {
+  max-width: 100%;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+.finops-frame {
+  width: 100%;
+  height: calc(100vh - 240px); /* header + footer + padding */
+  border: none;
+  border-radius: 12px;
+  display: block;
+}
+
+/* Pagination base */
+/* Force perfect centering inside pagination buttons */
+.pagination .page-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 32px; /* keeps all buttons same width */
+  height: 32px; /* matches pagination-sm height */
+  padding: 0; /* remove Bootstrap padding weirdness */
+  line-height: 1; /* kills vertical misalignment */
+}
+
+/* Hover */
+.pagination .page-link:hover {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+/* Disabled buttons (« ») */
+.pagination .page-item.disabled .page-link {
+  color: #aaa;
+  border-color: #ddd;
+  background-color: transparent;
+}
+
+/* Scoped sizing so we don't change every input site-wide */
+#queryDataForm .input-fixed {
+  max-width: 420px; /* desktop: limit greedy inputs */
+  width: 100%; /* mobile: full width */
+  box-sizing: border-box;
+}
+
+/* 🔧 Ensures fixed column widths are respected */
+.table-fixed {
+  table-layout: fixed;
+}
+
+/* 🔧 Keep long emails from breaking layout */
+.table-fixed td:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 🔧 Center non-user columns in body */
+.table-fixed td:not(:first-child) {
+  text-align: center;
+}
